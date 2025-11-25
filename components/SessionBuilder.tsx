@@ -28,9 +28,32 @@ export const SessionBuilder: React.FC<SessionBuilderProps> = ({ mode, onSessionC
     ? ['Sleepy Time 😴', 'Calm Down 🧘', 'Happy Thoughts 🌟', 'Focus Power 🧠']
     : ['Stress Relief', 'Better Sleep', 'Morning Energy', 'Deep Focus', 'Anxiety Release'];
 
-  const visualStyles = isKid
-    ? ['Magic Forest 🌳', 'Space Adventure 🚀', 'Underwater World 🐠', 'Cartoon Animals 🦊']
-    : ['Zen Garden', 'Abstract Geometry', 'Misty Mountains', 'Cosmic Nebula', 'Surrealist Dream'];
+  // Enhanced visual styles with separated data for better UI rendering
+  const visualStyleOptions = isKid
+    ? [
+        { name: 'Enchanted Forest', emoji: '🌳' }, 
+        { name: 'Outer Space', emoji: '🚀' }, 
+        { name: 'Underwater Kingdom', emoji: '🐠' }, 
+        { name: 'Animal Village', emoji: '🦊' },
+        { name: 'Cloud Castle', emoji: '🏰' },
+        { name: 'Secret Garden', emoji: '🌸' },
+        { name: 'Dinosaur Land', emoji: '🦕' },
+        { name: 'Candy Kingdom', emoji: '🍭' },
+        { name: 'Pirate Ship', emoji: '🏴‍☠️' },
+        { name: 'Superhero City', emoji: '🏙️' }
+      ]
+    : [
+        { name: 'Geometric Patterns', emoji: '📐' }, 
+        { name: 'Celestial Nebula', emoji: '🌌' }, 
+        { name: 'Water Ripples', emoji: '💧' }, 
+        { name: 'Light Forms', emoji: '✨' },
+        { name: 'Zen Garden', emoji: '🎋' },
+        { name: 'Misty Mountains', emoji: '🏔️' },
+        { name: 'Aurora Borealis', emoji: '🌠' },
+        { name: 'Desert Dunes', emoji: '🏜️' },
+        { name: 'Deep Ocean', emoji: '🌊' },
+        { name: 'Rainforest Rain', emoji: '🌧️' }
+      ];
 
   const voices = isKid
     ? [VoiceName.Puck, VoiceName.Zephyr]
@@ -85,7 +108,7 @@ export const SessionBuilder: React.FC<SessionBuilderProps> = ({ mode, onSessionC
   );
 
   return (
-    <div className={`max-w-2xl mx-auto p-6 rounded-2xl ${isKid ? 'bg-white border-4 border-kid-secondary shadow-[8px_8px_0px_rgba(245,158,11,0.5)]' : 'bg-white shadow-xl'}`}>
+    <div className={`max-w-3xl mx-auto p-6 rounded-2xl ${isKid ? 'bg-white border-4 border-kid-secondary shadow-[8px_8px_0px_rgba(245,158,11,0.5)]' : 'bg-white shadow-xl'}`}>
       
       {!loading && (
         <div className="flex justify-between mb-8 px-8 relative">
@@ -109,15 +132,15 @@ export const SessionBuilder: React.FC<SessionBuilderProps> = ({ mode, onSessionC
               <h2 className={`text-2xl font-bold text-center ${isKid ? 'font-rounded text-kid-primary' : 'text-slate-800'}`}>
                 {isKid ? "How are you feeling today?" : "What is your goal for this session?"}
               </h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {moods.map(m => (
                   <button
                     key={m}
                     onClick={() => setFormData({ ...formData, mood: m })}
-                    className={`p-4 rounded-xl border-2 transition-all ${
+                    className={`p-4 rounded-xl border-2 transition-all font-medium h-24 flex items-center justify-center text-center ${
                       formData.mood === m
-                        ? (isKid ? 'border-kid-primary bg-sky-50' : 'border-indigo-600 bg-indigo-50')
-                        : 'border-slate-200 hover:border-slate-300'
+                        ? (isKid ? 'border-kid-primary bg-sky-50 shadow-md transform scale-105' : 'border-indigo-600 bg-indigo-50 shadow-md')
+                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                     }`}
                   >
                     {m}
@@ -135,33 +158,43 @@ export const SessionBuilder: React.FC<SessionBuilderProps> = ({ mode, onSessionC
               <h2 className={`text-2xl font-bold text-center ${isKid ? 'font-rounded text-kid-primary' : 'text-slate-800'}`}>
                 {isKid ? "Pick a magical place!" : "Choose a visual environment"}
               </h2>
-              <div className="grid grid-cols-2 gap-4">
-                {visualStyles.map(v => (
-                  <button
-                    key={v}
-                    onClick={() => setFormData({ ...formData, visualStyle: v })}
-                    className={`p-4 rounded-xl border-2 transition-all ${
-                      formData.visualStyle === v
-                        ? (isKid ? 'border-kid-primary bg-sky-50' : 'border-indigo-600 bg-indigo-50')
-                        : 'border-slate-200 hover:border-slate-300'
-                    }`}
-                  >
-                    {v}
-                  </button>
-                ))}
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                {visualStyleOptions.map(option => {
+                  const fullValue = `${option.name} ${option.emoji}`;
+                  const isSelected = formData.visualStyle === fullValue;
+                  
+                  return (
+                    <button
+                      key={option.name}
+                      onClick={() => setFormData({ ...formData, visualStyle: fullValue })}
+                      className={`p-2 rounded-xl border-2 transition-all text-center flex flex-col items-center justify-center min-h-[110px] ${
+                        isSelected
+                          ? (isKid ? 'border-kid-primary bg-sky-50 shadow-lg scale-105 ring-2 ring-kid-primary/20' : 'border-indigo-600 bg-indigo-50 shadow-lg scale-105')
+                          : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 hover:scale-105'
+                      }`}
+                    >
+                      <span className="text-3xl mb-2 filter drop-shadow-sm">{option.emoji}</span>
+                      <span className={`text-xs font-bold leading-tight ${isKid ? 'text-slate-700' : 'text-slate-600'}`}>
+                        {option.name}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
               
-              <div className="mt-4">
-                 <label className="block text-sm font-medium text-slate-700 mb-2">Image Quality</label>
-                 <div className="flex gap-2">
+              <div className="mt-8 border-t border-slate-100 pt-6">
+                 <label className={`block text-sm font-bold mb-3 ${isKid ? 'text-slate-600' : 'text-slate-700'}`}>
+                    {isKid ? "Picture Quality 🎨" : "Resolution"}
+                 </label>
+                 <div className="flex gap-3">
                     {Object.values(ImageSize).map(size => (
                       <button
                         key={size}
                         onClick={() => setFormData({ ...formData, imageSize: size })}
-                        className={`px-3 py-1 rounded border text-sm ${
+                        className={`flex-1 py-2 rounded-lg border text-sm font-medium transition-colors ${
                            formData.imageSize === size 
-                           ? (isKid ? 'bg-kid-primary text-white border-kid-primary' : 'bg-indigo-600 text-white border-indigo-600')
-                           : 'bg-white border-slate-300 text-slate-600'
+                           ? (isKid ? 'bg-kid-primary text-white border-kid-primary shadow-sm' : 'bg-indigo-600 text-white border-indigo-600 shadow-sm')
+                           : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400'
                         }`}
                       >
                         {size}
@@ -182,28 +215,35 @@ export const SessionBuilder: React.FC<SessionBuilderProps> = ({ mode, onSessionC
               <h2 className={`text-2xl font-bold text-center ${isKid ? 'font-rounded text-kid-primary' : 'text-slate-800'}`}>
                 {isKid ? "Who should read the story?" : "Select a voice guide"}
               </h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {voices.map(v => (
                   <button
                     key={v}
                     onClick={() => setFormData({ ...formData, voice: v })}
-                    className={`p-4 rounded-xl border-2 transition-all ${
+                    className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center justify-center gap-2 min-h-[120px] ${
                       formData.voice === v
-                        ? (isKid ? 'border-kid-primary bg-sky-50' : 'border-indigo-600 bg-indigo-50')
-                        : 'border-slate-200 hover:border-slate-300'
+                        ? (isKid ? 'border-kid-primary bg-sky-50 shadow-md' : 'border-indigo-600 bg-indigo-50 shadow-md')
+                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                     }`}
                   >
-                    <div className="font-semibold">{v}</div>
-                    <div className="text-xs text-slate-500">AI Voice</div>
+                    <div className={`p-3 rounded-full ${isKid ? 'bg-white' : 'bg-slate-100'}`}>
+                      {isKid ? '🦜' : '🎙️'}
+                    </div>
+                    <div className="text-center">
+                      <div className="font-bold">{v}</div>
+                      <div className="text-xs text-slate-400 mt-1">AI Voice</div>
+                    </div>
                   </button>
                 ))}
               </div>
               
-              <div className="bg-slate-50 p-4 rounded-lg text-sm text-slate-600">
-                <h4 className="font-semibold mb-1">Summary</h4>
-                <p>Mood: {formData.mood}</p>
-                <p>Visual: {formData.visualStyle} ({formData.imageSize})</p>
-                <p>Voice: {formData.voice}</p>
+              <div className="bg-slate-50 p-4 rounded-lg text-sm text-slate-600 border border-slate-100">
+                <h4 className="font-bold mb-2 uppercase text-xs tracking-wider text-slate-400">Session Summary</h4>
+                <div className="space-y-1">
+                    <p><span className="font-semibold text-slate-700">Mood:</span> {formData.mood}</p>
+                    <p><span className="font-semibold text-slate-700">Visual:</span> {formData.visualStyle} ({formData.imageSize})</p>
+                    <p><span className="font-semibold text-slate-700">Voice:</span> {formData.voice}</p>
+                </div>
               </div>
 
               <div className="flex justify-between pt-4">
